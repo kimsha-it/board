@@ -8,8 +8,14 @@
     <h1>DETAIL</h1>
 
     <h2 th:text="${post.title}"></h2>
-    <h2 th:text="${post.createAt}"></h2></body>
+    <h2 th:text="${post.createAt}"></h2>
     <h2 th:text="${post.content}"></h2>
 
     <a href="/posts">목록</a>
+    <a th:href="@{/posts/{id}/edit(id=${post.id})}">수정</a>
+
+    <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+        <button type="submit" onclick="return confirm('delete?')">삭제</button>
+    </form>
+</body>
 </html>

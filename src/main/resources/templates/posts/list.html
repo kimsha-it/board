@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>List</h1>
+    <a href="/posts/new">new</a>
 
     <table>
         <thead>
@@ -19,9 +20,8 @@
             <tr th:each="post : ${posts}">
                 <td th:text="${post.id}"></td>
                 <td>
-                    <a th:href="@{/post/{id}(id=${post.id})}"
+                    <a th:href="@{/posts/{id}(id=${post.id})}"
                        th:text="${post.title}">
-
                     </a>
                 </td>
                 <td th:text="${post.createAt}"></td>

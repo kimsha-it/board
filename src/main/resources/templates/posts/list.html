@@ -8,6 +8,11 @@
     <h1>List</h1>
     <a href="/posts/new">new</a>
 
+    <form action="/posts/search">
+        <input type="text" name="keyword">
+        <input type="submit">
+    </form>
+
     <table>
         <thead>
             <tr>
@@ -24,7 +29,7 @@
                        th:text="${post.title}">
                     </a>
                 </td>
-                <td th:text="${post.createAt}"></td>
+                <td th:text="${post.createdAt}"></td>
             </tr>
         </tbody>
     </table>

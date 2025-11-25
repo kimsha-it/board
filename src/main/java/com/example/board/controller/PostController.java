@@ -7,6 +7,7 @@ import com.example.board.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -145,5 +146,14 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    @GetMapping("/more")
+    public String more(
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        Slice<Post> postSlice = postService.getPostsSlice(pageable);
+        model.addAttribute("postSlice", postSlice);
+        return "posts/list-more";
+    }
 
 }

@@ -64,12 +64,10 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public void testFirstLevelCache() {
-        Post post1 = postRepository.findById(1L)
-                .orElseThrow();
+        Post post1 = postRepository.findById(1L).orElseThrow();
         System.out.println(post1.getTitle());
 
-        Post post2 = postRepository.findById(1L)
-                .orElseThrow();
+        Post post2 = postRepository.findById(1L).orElseThrow();
         System.out.println(post2.getTitle());
 
         System.out.println(post1 == post2);
@@ -77,8 +75,7 @@ public class PostService {
 
     @Transactional
     public void testWriteBehind() {
-        Post post = postRepository.findById(1L)
-                .orElseThrow();
+        Post post = postRepository.findById(1L).orElseThrow();
 
         post.setTitle("hello!!!!!");
         System.out.println("update1");
@@ -94,15 +91,14 @@ public class PostService {
 
     @Transactional
     public void testDirtyChecking() {
-        Post post = postRepository.findById(1L)
-                .orElseThrow();
+        Post post = postRepository.findById(1L).orElseThrow();
         System.out.println("SELECT!!!!");
 
         post.setTitle("hello!!!!!");
         System.out.println("change title");
     }
 
-    public List<Post> searchPost(String keyword) {
+    public List<Post> searchPosts(String keyword) {
         return postRepository.findByTitleContaining(keyword);
     }
 
@@ -126,10 +122,20 @@ public class PostService {
 
     @Transactional
     public void createDummyPosts(int count) {
-        for (int i = 0; i < count; i++) {
-            Post post = new Post(i + "번 제목", "게시물 내용");
+        for (int i = 1; i <= count; i++) {
+            Post post = new Post(i + "번 제목", "게시물내용");
             postRepository.save(post);
         }
     }
 
+    public Page<Post> searchPostsPage(String keyword, Pageable pageable) {
+        return postRepository.findByTitleContaining(keyword, pageable);
+    }
+
 }
+
+
+
+
+
+

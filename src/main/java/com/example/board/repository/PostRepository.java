@@ -11,31 +11,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
     // 기본 CRUD 메서드
 
-    // 1. 비영속 (id가 부여되지 않음)
-    // new Post("title", "content");
     // 저장 (INSERT or UPDATE)
     // Post save(Post entity);
 
-    // => persist()
     // 조회
     // Optional<Post> findById(Long id);
     // List<Post> findAll();
     // List<Post> findAll(Sort sort);
 
-    // 2. 영속 (id가 부여됨)
-    // em.persist(post);
-
-    // => detach(), clear()
-
-    // 3. 준영속 (detached 수정하는중)
-    // em.detach(post)
-
-    // => merger() => 영속으로 돌아감
-
-    // 4. 삭제
-    // em.remove(post)
     // 삭제
     // void deleteById(Long id);
     // void delete(Post entity);
@@ -57,12 +43,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // LIKE keyword%
     List<Post> findByTitleStartingWith(String keyword);
 
+    // >
+    List<Post> findByIdGreaterThan(Long id);
+
     // ORDER BY id DESC
     List<Post> findAllByOrderByIdDesc();
 
-    // 제목 or 내용으로 검색
+    // 제목 or 내용 으로 검색
     List<Post> findByTitleContainingOrContentContaining(
-            String titleKeyword, String contentKeyword);
+            String titleKeyword, String contentKeyword
+    );
 
     // 제목 or 내용 으로 검색
     @Query("""
@@ -102,6 +92,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 오버로딩 (동일한 이름이지만 매개변수가 다름)
     Page<Post> findAll(Pageable pageable);
 
-
+    Page<Post> findByTitleContaining(String keyword, Pageable pageable);
 }
 

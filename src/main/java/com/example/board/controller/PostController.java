@@ -22,6 +22,10 @@ public class PostController {
     private final PostService postService;
 //    private final PostRepository postRepository;
 
+//    public PostController(PostRepository postRepository) {
+//        this.postRepository = postRepository;
+//    }
+
     @GetMapping
     public String list(
             @PageableDefault(
@@ -35,17 +39,16 @@ public class PostController {
         Page<Post> postPage = postService.getPostsPage(pageable);
 //        model.addAttribute("posts", postPage.getContent());
 
-        int currentPage = pageable.getPageNumber();
+        int currentPage = postPage.getNumber();
         int totalPages = postPage.getTotalPages();
-        int startPage =Math.max(0, currentPage - 5);
-        int endPage =Math.min(totalPages - 1, currentPage + 5);
-
+        int startPage = Math.max(0, currentPage - 5);
+        int endPage = Math.min(totalPages - 1, currentPage + 5);
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-        return "posts/list";
 
+        return "posts/list";
     }
 
     @GetMapping("/{id}")
@@ -63,6 +66,7 @@ public class PostController {
 
     @PostMapping
     public String create(@ModelAttribute Post post) {
+        // Post post = new Post("hi", "hello");
         postService.createPost(post);
         return "redirect:/posts";
     }
@@ -74,8 +78,10 @@ public class PostController {
         return "posts/form";
     }
 
-    @PostMapping("/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute Post post) {
+    @PostMapping("/{id}")
+    public String update(
+            @PathVariable Long id,
+            @ModelAttribute Post post) {
         postService.updatePost(id, post);
         return "redirect:/posts/" + id;
     }
@@ -105,14 +111,28 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String keyword, Model model) {
-        List<Post> posts = postService.searchPostsByTitleOrContent(keyword);
-        model.addAttribute("posts", posts);
-        return "posts/list";
+    public String search(
+            @RequestParam String keyword,
+            @PageableDefault(sort="id") Pageable pageable,
+            Model model
+    ) {
+        Page<Post> postPage = postService.searchPostsPage(keyword, pageable);
+
+        int currentPage = postPage.getNumber();
+        int totalPages = postPage.getTotalPages();
+        int startPage = Math.max(0, currentPage - 5);
+        int endPage = Math.min(totalPages - 1, currentPage + 5);
+
+        model.addAttribute("postPage", postPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("keyword", keyword);
+        return "posts/search";
     }
 
     // 최근 게시물 3개만 출력
     // /posts/recent
+
     @GetMapping("/recent")
     public String recent(Model model) {
         model.addAttribute("posts", postService.getRecentPosts());
@@ -124,5 +144,6 @@ public class PostController {
         postService.createDummyPosts(100);
         return "redirect:/posts";
     }
+
 
 }

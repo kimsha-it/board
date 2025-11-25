@@ -1,51 +1,24 @@
 package com.example.board.repository;
 
+import java.util.List;
 import com.example.board.entity.Post;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class PostRepository {
-    @PersistenceContext
-    private EntityManager em;
-
-    public Post save(Post post) {
-        em.persist(post);
-        return post;
-    }
-
-    public Post findById(Long id) {
-        return em.find(Post.class, id);
-    }
-
-    public List<Post> findAll() {
-        // EM => 단일 엔티티 조작만 기본 제공
-        String jpql = "SELECT p FROM Post p";
-        return em.createQuery(jpql, Post.class).getResultList();
-    }
-
-    public Post update(Post post) {
-        return em.merge(post);
-    }
-
-    public void delete(Post post) {
-        em.remove(post);
-    }
-
-    public List<Post> findByTitleContaining(String keyword) {
-        String jpql = "SELECT p FROM Post p WHERE p.title LIKE :keyword";
-        return em.createQuery(jpql, Post.class)
-                .setParameter("keyword", "%" + keyword + "%")
-                .getResultList();
-    }
+public interface PostRepository extends JpaRepository<Post, Long> {
+    // 기본 CRUD 메서드
 
     // 1. 비영속 (id가 부여되지 않음)
     // new Post("title", "content");
+    // 저장 (INSERT or UPDATE)
+    // Post save(Post entity);
 
     // => persist()
+    // 조회
+    // Optional<Post> findById(Long id);
+    // List<Post> findAll();
+    // List<Post> findAll(Sort sort);
 
     // 2. 영속 (id가 부여됨)
     // em.persist(post);
@@ -59,63 +32,14 @@ public class PostRepository {
 
     // 4. 삭제
     // em.remove(post)
+    // 삭제
+    // void deleteById(Long id);
+    // void delete(Post entity);
 
+    // 개수 조회
+    // long count();
+    // 존재 여부 확인
+    // boolean existsById(Long id);
 
+    List<Post> findByTitleContaining(String keyword);
 }
-
-
-
-
-//package com.example.board.repository;
-//
-//import com.example.board.dto.PostDto;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.core.RowMapper;
-//import org.springframework.stereotype.Repository;
-//
-//import java.util.List;
-//
-//@Repository
-//@RequiredArgsConstructor
-//public class PostRepository {
-//    private final JdbcTemplate jdbcTemplate;
-//
-//    private final RowMapper<PostDto> rowMapper = (rs, rowNum) -> {
-//        return new PostDto(
-//                rs.getLong("id"),
-//                rs.getString("title"),
-//                rs.getString("content"),
-//                rs.getTimestamp("create_at").toLocalDateTime()
-//        );
-//    };
-//
-//    // 전체 조회
-//    public List<PostDto> findAll() {
-//        String sql = "SELECT * FROM post";
-//        return jdbcTemplate.query(sql, rowMapper);
-//    }
-//
-//    public PostDto findById(Long id) {
-//        String sql = "SELECT * FROM post WHERE id = ?";
-//
-//        // queryForObject => 단일 행 조회
-//        PostDto post = jdbcTemplate.queryForObject(sql, rowMapper, id);
-//        return post;
-//    }
-//
-//    public void save(PostDto postDto) {
-//        String sql = "INSERT INTO post (title, content) VALUES (?, ?)";
-//        jdbcTemplate.update(sql, postDto.getTitle(), postDto.getContent());
-//    }
-//
-//    public void update(Long id, PostDto postDto) {
-//        String sql = "UPDATE post SET title = ?, content = ? WHERE id = ?";
-//        jdbcTemplate.update(sql, postDto.getTitle(), postDto.getContent(), id);
-//    }
-//
-//    public void delete(Long id) {
-//        String sql = "DELETE FROM post WHERE id = ?";
-//        jdbcTemplate.update(sql, id);
-//    }
-//}

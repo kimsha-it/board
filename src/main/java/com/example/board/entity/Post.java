@@ -8,16 +8,17 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="post")
+@Table(name = "post")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Post {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //AUTO INCREMENT
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // AUTO INCREAMENT
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100) // NOT NULL, VARCHAR(100)
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -31,9 +32,10 @@ public class Post {
         this.content = content;
     }
 
-    // 생성 시전에 자동으로 현재 시간을 설정
+    // 생성 시점에 자동으로 현재 시간을 설정
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
+
 }

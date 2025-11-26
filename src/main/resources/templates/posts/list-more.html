@@ -5,22 +5,21 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
+<table>
+    <tr th:each="post : ${postSlice.content}">
+        <td th:text="${post.id}"></td>
+        <td>
+            <a th:href="@{/posts/{id}(id=${post.id})}"
+               th:text="${post.title}">
+            </a>
+        </td>
+        <td th:text="${post.createdAt}"></td>
+    </tr>
+</table>
 
-        <tr th:each="post : ${postSlice.content}">
-            <td th:text="${post.id}"></td>
-            <td>
-                <a th:href="@{/posts/{id}(id=${post.id})}"
-                   th:text="${post.title}">
-                </a>
-            </td>
-            <td th:text="${post.createdAt}"></td>
-        </tr>
-    </table>
-
-    <a th:href="@{/posts/more(page=${postSlice.number+1})}"
-       th:if="${postSlice.hasNext()}"
-    >더보기</a>
-    <p th:unless="${postSlice.hasNext()}">마지막 페이지입니다.</p>
+<a th:href="@{/posts/more(page=${postSlice.number+1})}"
+   th:if="${postSlice.hasNext()}"
+>더보기</a>
+<p th:unless="${postSlice.hasNext()}">마지막페이지입니다.</p>
 </body>
 </html>

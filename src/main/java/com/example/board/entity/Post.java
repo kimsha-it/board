@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,9 +30,11 @@ public class Post {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+//    @BatchSize(size = 10)
     @OneToMany(mappedBy = "post",
             cascade = CascadeType.REMOVE,
-            orphanRemoval = true)
+            orphanRemoval = true
+    )
     private List<Comment> comments = new ArrayList<>();
 
     public Post(String title, String content) {
